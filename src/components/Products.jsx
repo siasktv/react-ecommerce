@@ -1,7 +1,14 @@
 import "./Products.css"
 import { AddToCartIcon } from "./Icons"
+import { CartContext } from "../context/cart"
+import { useContext } from "react"
 
 export function Products ({ products } ) {
+
+    const { addToCart, cart } = useContext(CartContext)
+
+    console.log(cart)
+
     return(
         <div className="products">
             <ul>
@@ -16,7 +23,7 @@ export function Products ({ products } ) {
                                 <strong>{product.title}</strong> - ${product.price}
                             </div>
                             <div>
-                                <button><AddToCartIcon/></button>
+                                <button onClick={() => addToCart(product)}><AddToCartIcon/></button>
                             </div>
                         </li>
                     ))
