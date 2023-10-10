@@ -1,19 +1,23 @@
 import "./Products.css"
-import { AddToCartIcon } from "./Icons"
+import { AddToCartIcon, RemoveFromCartIcon } from "./Icons"
 import { CartContext } from "../context/cart"
 import { useContext } from "react"
 
 export function Products ({ products } ) {
 
-    const { addToCart, cart } = useContext(CartContext)
+    const { addToCart, cart, removeFromCart } = useContext(CartContext)
 
-    console.log(cart)
+    const checkProductInCart = (product) => {
+        return cart.some(item => item.id === product.id)
+    }
 
     return(
         <div className="products">
             <ul>
                 {
-                    products.map((product) => (
+                    products.map((product) => {
+                    const isInCart = checkProductInCart(product)
+                    return (
                         <li key={product.id}>
                             <img
                             src={product.thumbnail}
@@ -23,10 +27,17 @@ export function Products ({ products } ) {
                                 <strong>{product.title}</strong> - ${product.price}
                             </div>
                             <div>
-                                <button onClick={() => addToCart(product)}><AddToCartIcon/></button>
+                                <button
+                                style={{ backgroundColor: isInCart ? "red" :  "blue"}} 
+                                 onClick={() => {
+                                    isInCart ? 
+                                    removeFromCart(product) 
+                                    : addToCart(product)
+                                }}>
+                                   { isInCart ? <RemoveFromCartIcon/> : <AddToCartIcon/>}
+                                    </button>
                             </div>
-                        </li>
-                    ))
+                        </li> )})
                 }
             </ul>
         </div>

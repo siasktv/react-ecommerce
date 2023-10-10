@@ -1,10 +1,13 @@
 import "./Cart.css"
 import { CartIcon, ClearCartIcon } from "./Icons"
-import { useId } from "react"
+import { useId, useContext } from "react"
+import { CartContext } from "../context/cart"
 
 
 export function Cart() {
     const cartCheckboxId = useId()
+    const { cart, clearCart,  addToCart } = useContext(CartContext)
+
     return(
         <>
         <label htmlFor={cartCheckboxId} className="cart-button">
@@ -14,23 +17,27 @@ export function Cart() {
 
         <aside className="cart">
             <ul>
-                <li>
-                    <img
-                    src="https://i.dummyjson.com/data/products/6/thumbnail.png"
-                    alt=""
-                    />
-                    <div>
-                        <strong>Iphone</strong> -$1500
-                    </div>
+            {cart.length > 0 ? (
+            cart.map((item) => {
+              return (
+                <li key={item.id}>
+                  <img src={item.thumbnail} alt={item.title} />
+                  <div>
+                    <strong>{item.title}</strong> - ${item.price}
+                  </div>
 
-                    <footer>
-                        <small>
-                            Qty: 1
-                        </small>
-                    </footer>
+                  <footer>
+                    <small>Qty: {item.quantity}</small>
+                    <button onClick={() => addToCart(item)}>+</button>
+                  </footer>
                 </li>
+              );
+            })
+          ) : (
+            <p>No hay productos</p>
+          )}
             </ul>
-            <button>
+            <button onClick={() => clearCart()}>
                 <ClearCartIcon/>
             </button>
         </aside>
